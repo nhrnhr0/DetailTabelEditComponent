@@ -22,12 +22,16 @@
         ret.cost_price = $costPriceValue
         ret.client_price = $clientPriceValue
         ret.recomended_price = $recomendedPriceValue
+        ret.providerMakat = '' + $providerMakat;
         ret.parent = $dataStore.parent
+        debugger;
+
         return ret;
     }
     let costPriceValue = new writable([]);
     let clientPriceValue = new writable([]);
     let recomendedPriceValue = new writable([]);
+    let providerMakat = new writable([]);
     let sizesValue = new writable([]);
     let colorsValue = new writable([]);
     let sizes_options = [];
@@ -63,6 +67,7 @@
                 costPriceValue.set($dataStore.cost_price);
                 clientPriceValue.set($dataStore.client_price);
                 recomendedPriceValue.set($dataStore.recomended_price);
+                providerMakat.set($dataStore.providerMakat);
             })
             .catch(error => console.log('error', error));
     }
@@ -98,6 +103,15 @@
         let colors = convert_api_to_options($colorsApiData, $productStore.colors);
         colors_options = colors;
     }
+
+    function price_component(buy, sell) {
+        let prcent = ((buy / sell) - 1)*100        
+        return prcent.toFixed(2);
+    }
+    let cost_profit;
+    let client_profit;
+    $: {cost_profit = price_component($clientPriceValue, $costPriceValue);}
+    $: {client_profit= price_component($recomendedPriceValue ,$clientPriceValue)}
     
 </script>
 <tr>
@@ -118,9 +132,18 @@
     </td>
     <td>
         <input type="number" bind:value={$clientPriceValue}>
+        <div class="profit_div" class:red={cost_profit<=0}>
+            {cost_profit}%
+        </div>
     </td>
     <td>
         <input type="number" bind:value={$recomendedPriceValue}>
+        <div class="profit_div" class:red={cost_profit<=0}>
+            {client_profit}%
+        </div>
+    </td>
+    <td>
+        <input type="text" bind:value={$providerMakat}>
     </td>
 </tr>
 
@@ -131,5 +154,14 @@
 td {
     margin: 5px;
     padding: 5px;
+}
+input[type="number"] {
+    width: 80%;
+}
+.profit_div {
+    color: green;
+}
+.red {
+    color: red;
 }
 </style>

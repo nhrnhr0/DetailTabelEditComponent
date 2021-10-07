@@ -17,7 +17,7 @@
         notifier
     } from '@beyonk/svelte-notifications';
 
-    export let catalog_image_id = '129';
+    export let catalog_image_id = '167';
     let notification_timeout = 3500;
     let rows = [];
     let username, password;
@@ -96,7 +96,7 @@
 
                         openModal();
                     } else {
-                        notifier.success(`POST to ${url}, ${result}`, notification_timeout);
+                        notifier.success(`POST to ${url}, ${JSON.stringify(result, null, 2)}`, 10000);
                     }
                 })
                 .catch(error => {
@@ -167,6 +167,7 @@
                 <th>מחיר עלות</th>
                 <th>מחיר לחנות</th>
                 <th>מחיר מומלץ</th>
+                <th>מקט ספק</th>
             </tr>
             {#each $productStore.detailTabel as entryId, i}
                 <TableRow entry_id={entryId} bind:this={rows[i]}/>
